@@ -58,10 +58,10 @@ describe 'Items API' do
     it "I can create a new item" do
       merchant = create(:merchant)
       item_params = ({
-                      name: "Dinosaur Chicken Nuggets",
-                      description: "A very yummy treat that is definitely made for adults and not children",
-                      unit_price: 7.99,
-                      merchant_id: merchant.id
+        name: "Dinosaur Chicken Nuggets",
+        description: "A very yummy treat that is definitely made for adults and not children",
+        unit_price: 7.99,
+        merchant_id: merchant.id
         })
       headers = {"CONTENT_TYPE" => "application/json"}
 
