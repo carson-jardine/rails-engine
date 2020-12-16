@@ -40,6 +40,18 @@ describe 'Merchant API' do
 
       expect(merchant).to have_key(:name)
       expect(merchant[:name]).to be_a(String)
-    end 
+    end
+  end
+  describe 'merchant create' do
+    it "I can create a new merchant" do
+      merchant_params = ({ name: "Trader Joes" })
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      post "/api/v1/merchants", headers: headers, params: JSON.generate(merchant_params)
+      created_merchant = Merchant.last
+
+      expect(response).to be_successful
+      expect(created_merchant.name).to eq(merchant_params[:name])
+    end
   end
 end
