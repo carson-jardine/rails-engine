@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :invoice do
-    customer { nil }
-    merchant { nil }
-    status { "MyString" }
+    status { "shipped" }
+    association :customer
+    association :merchant
   end
 end
