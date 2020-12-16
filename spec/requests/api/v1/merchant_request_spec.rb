@@ -70,4 +70,14 @@ describe 'Merchant API' do
       expect(merchant.name).to eq(merchant_params[:name])
     end
   end
+  describe 'merchants destroy' do
+    it "I can destroy an merchant" do
+      merchant = create(:merchant)
+
+      expect(Merchant.count).to eq(1)
+      expect{ delete "/api/v1/merchants/#{merchant.id}" }.to change(Merchant, :count).by(-1)
+      expect(response).to be_successful
+      expect{ Merchant.find(merchant.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
 end
