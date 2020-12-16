@@ -43,7 +43,7 @@ describe 'Items API' do
 
       json = JSON.parse(response.body, symbolize_names: true)
       item = json[:data][:attributes]
-      
+
       expect(item).to have_key(:name)
       expect(item[:name]).to be_a(String)
 
@@ -52,6 +52,27 @@ describe 'Items API' do
 
       expect(item).to have_key(:unit_price)
       expect(item[:unit_price]).to be_a(Float)
+    end
+  end
+  describe 'items create' do
+    it "I can create a new item" do
+      merchant = create(:merchant)
+      item_params = ({
+                      name: "Dinosaur Chicken Nuggets",
+                      description: "A very yummy treat that is definitely made for adults and not children",
+                      unit_price: 7.99,
+                      merchant_id: merchant.id
+        })
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+      created_item = Item.last
+
+      expect(response).to be_successful
+      expect(created_item.name).to eq(item_params[:name])
+      expect(created_item.description).to eq(item_params[:description])
+      expect(created_item.unit_price).to eq(item_params[:unit_price])
+      expect(created_item.merchant_id).to eq(merchant.id)
     end
   end
 end
