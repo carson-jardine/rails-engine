@@ -17,7 +17,8 @@ class Merchant < ApplicationRecord
   def self.most_revenue(quantity)
     Merchant.joins(invoices: [:invoice_items, :transactions])
     .select("merchants.*, merchants.name, SUM(invoice_items.unit_price * invoice_items.quantity) AS total")
-    .where(transactions: {result: 'success'}, invoices: {status: 'shipped'})
+    .merge(Transaction.successful)
+    .merge(Invoice.shipped)
     .group("merchants.id")
     .order("total DESC")
     .limit(quantity)
@@ -26,9 +27,18 @@ class Merchant < ApplicationRecord
   def self.most_items(quantity)
     Merchant.joins(invoices: [:invoice_items, :transactions])
     .select("merchants.*, merchants.name, SUM(invoice_items.quantity) AS num_items")
-    .where(transactions: {result: 'success'}, invoices: {status: 'shipped'})
+    .merge(Transaction.successful)
+    .merge(Invoice.shipped)
     .group("merchants.id")
     .order("num_items DESC")
     .limit(quantity)
   end
+
+  # def self.revenue_by_date_range(start_date, end_date)
+  #   Merchant.joins(invoices: [:invoice_items, :transactions])
+  #   .merge(Transaction.successful)
+  #   .merge(Invoice.shipped)
+  #   .where('DATE(invoices.created_at) BETWEEN ? AND ?', start_date, end_date)
+  #   .sum("invoice_items.unit_price * invoice_items.quantity")
+  # end
 end
