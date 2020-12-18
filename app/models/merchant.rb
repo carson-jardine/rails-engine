@@ -3,6 +3,8 @@ class Merchant < ApplicationRecord
 
   has_many :invoices
   has_many :items
+  has_many :invoice_items, through: :invoices
+  has_many :transactions, through: :invoices
 
   validates :name, presence: true
 
@@ -18,6 +20,15 @@ class Merchant < ApplicationRecord
     .where(transactions: {result: 'success'}, invoices: {status: 'shipped'})
     .group("merchants.id")
     .order("total DESC")
+    .limit(quantity)
+  end
+
+  def self.most_items(quantity)
+    Merchant.joins(invoices: [:invoice_items, :transactions])
+    .select("merchants.*, merchants.name, SUM(invoice_items.quantity) AS num_items")
+    .where(transactions: {result: 'success'}, invoices: {status: 'shipped'})
+    .group("merchants.id")
+    .order("num_items DESC")
     .limit(quantity)
   end
 end
