@@ -134,8 +134,6 @@ describe 'Items Search API' do
       end
 
       it "updated_at" do
-        updated_at = '2020-12-14'
-
         get "/api/v1/items/find?updated_at=December+14"
 
         expect(response).to be_successful
@@ -302,8 +300,6 @@ describe 'Items Search API' do
       end
 
       it "updated_at" do
-        updated_at = '2020-12-14'
-
         get "/api/v1/items/find_all?updated_at=December+14"
 
         expect(response).to be_successful
