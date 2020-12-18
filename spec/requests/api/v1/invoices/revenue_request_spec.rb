@@ -30,38 +30,23 @@ describe 'Merchants Business Intelligence API' do
       create(:transaction, invoice: invoice)
     end
   end
-  it 'returns array of merchants sorted by most revenue' do
-    get '/api/v1/merchants/most_revenue?quantity=3'
+  it "returns the total revenue from all invoices between given dates" do
+    start_date = Date.today - 80
+    end_date = Date.today + 1
+
+    get "/api/v1/revenue?start=#{start_date}&end=#{end_date}"
 
     expect(response).to be_successful
 
-    merchants = JSON.parse(response.body, symbolize_names: true)
+    revenue = JSON.parse(response.body, symbolize_names: true)
+    
+    expect(revenue).to have_key(:data)
+    expect(revenue[:data]).to be_a(Hash)
 
-    expect(merchants).to be_a(Hash)
-    expect(merchants).to have_key(:data)
-    expect(merchants[:data]).to be_an(Array)
+    expect(revenue[:data]).to have_key(:attributes)
+    expect(revenue[:data][:attributes]).to be_a(Hash)
 
-    expect(merchants[:data][0]).to have_key(:id)
-    expect(merchants[:data][0][:id]).to eq(@merchant_1.id.to_s)
-    expect(merchants[:data][0]).to have_key(:attributes)
-
-    expect(merchants[:data][0][:attributes]).to have_key(:name)
-    expect(merchants[:data][0][:attributes][:name]).to eq(@merchant_1.name)
-  end
-  it "returns an array of merchants sorted by most items sold" do
-    get '/api/v1/merchants/most_items?quantity=3'
-
-    expect(response).to be_successful
-
-    merchants = JSON.parse(response.body, symbolize_names: true)
-    expect(merchants).to be_a(Hash)
-    expect(merchants).to have_key(:data)
-    expect(merchants[:data]).to be_an(Array)
-
-    expect(merchants[:data][0]).to have_key(:id)
-    expect(merchants[:data][0]).to have_key(:attributes)
-
-    expect(merchants[:data][0][:attributes]).to have_key(:name)
-    expect(merchants[:data][0][:attributes][:name]).to eq(@merchant_2.name)
+    expect(revenue[:data][:attributes]).to have_key(:revenue)
+    expect(revenue[:data][:attributes][:revenue]).to be_a(Float)
   end
 end
