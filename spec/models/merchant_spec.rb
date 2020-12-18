@@ -49,5 +49,13 @@ RSpec.describe Merchant, type: :model do
       expect(merchants_2).to eq([@merchant_1, @merchant_3])
       expect(merchants_2).to_not include(@merchant_2)
     end
+    it ".most_items" do
+      merchants = Merchant.most_items(3)
+      expect(merchants).to eq([@merchant_1, @merchant_3, @merchant_2])
+
+      merchants_2 = Merchant.most_items(2)
+      expect(merchants_2).to eq([@merchant_1, @merchant_3])
+      expect(merchants_2).to_not include(@merchant_2)
+    end
   end
 end
