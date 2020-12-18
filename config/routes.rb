@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
       namespace :items do
         get '/:item_id/merchants', to: 'merchants#index'
+        get '/find', to: 'search#show'
+        get '/find_all', to: 'search#index'
       end
 
       resources :items
